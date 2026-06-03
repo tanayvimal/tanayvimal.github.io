@@ -1,0 +1,1588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tanay Vimal — Mechanical Engineering</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Serif+Display:ital@0;1&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --black: #000000; --white: #ffffff;
+    --gray-1: #111111; --gray-2: #1a1a1a; --gray-3: #262626;
+    --gray-4: #404040; --gray-5: #737373; --gray-6: #a3a3a3; --gray-7: #d4d4d4;
+    --serif: 'Instrument Serif', 'DM Serif Display', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+  }
+  html { scroll-behavior: smooth; font-size: 16px; }
+  body { background: var(--black); color: var(--white); font-family: var(--sans); font-weight: 400; line-height: 1.6; overflow-x: hidden; cursor: none; }
+  a { color: inherit; text-decoration: none; cursor: none; }
+  img { max-width: 100%; display: block; }
+
+  /* CUSTOM CURSOR */
+  #cursor { position: fixed; top: 0; left: 0; width: 12px; height: 12px; border: 1px solid var(--white); border-radius: 0; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: width 0.2s, height 0.2s, background 0.2s, border-radius 0.2s; mix-blend-mode: difference; }
+  #cursor.hovering { width: 40px; height: 40px; background: var(--white); border-radius: 50%; }
+  #cursor-dot { position: fixed; top: 0; left: 0; width: 4px; height: 4px; background: var(--white); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: opacity 0.2s; mix-blend-mode: difference; }
+
+  /* SCROLL PROGRESS BAR */
+  #scroll-progress { position: fixed; top: 0; left: 0; height: 1.5px; width: 0%; background: var(--white); z-index: 9998; transition: width 0.05s linear; }
+
+  /* PAGE TRANSITION WIPE */
+  #page-wipe { position: fixed; inset: 0; background: var(--white); z-index: 5000; transform: scaleX(0); transform-origin: left; pointer-events: none; }
+  #page-wipe.wipe-in { animation: wipeIn 0.45s cubic-bezier(0.77,0,0.18,1) forwards; }
+  #page-wipe.wipe-out { animation: wipeOut 0.45s cubic-bezier(0.77,0,0.18,1) forwards; }
+  @keyframes wipeIn { from { transform: scaleX(0); transform-origin: left; } to { transform: scaleX(1); transform-origin: left; } }
+  @keyframes wipeOut { from { transform: scaleX(1); transform-origin: right; } to { transform: scaleX(0); transform-origin: right; } }
+
+  /* IMAGE WIPE REVEAL */
+  .detail-placeholder, .detail-drawing { overflow: hidden; }
+  .img-wipe-reveal { animation: imgWipe 0.7s cubic-bezier(0.77,0,0.18,1) forwards; }
+  @keyframes imgWipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0% 0 0); } }
+
+  /* MAGNETIC BTN */
+  .btn { display: inline-block; padding: 0.75rem 1.75rem; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; border: 0.5px solid var(--gray-4); color: var(--gray-7); transition: background 0.25s, color 0.25s, border-color 0.25s, transform 0.15s; cursor: none; background: transparent; font-family: var(--sans); will-change: transform; }
+
+  /* TICKER */
+  .ticker-wrap { width: 100%; overflow: hidden; border-top: 0.5px solid var(--gray-3); border-bottom: 0.5px solid var(--gray-3); padding: 0.85rem 0; background: var(--black); }
+  .ticker-track { display: flex; gap: 0; width: max-content; animation: ticker 28s linear infinite; }
+  .ticker-track:hover { animation-play-state: paused; }
+  .ticker-item { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gray-5); padding: 0 2.5rem; white-space: nowrap; display: flex; align-items: center; gap: 2.5rem; }
+  .ticker-item::after { content: '·'; color: var(--gray-4); }
+  @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* STAGGERED TAGLINE */
+  .tagline-word { display: inline-block; opacity: 0; transform: translateY(12px); transition: opacity 0.4s ease, transform 0.4s ease; }
+  .tagline-word.visible { opacity: 1; transform: none; }
+
+  /* SPOTLIGHT */
+  #spotlight { position: fixed; pointer-events: none; z-index: 1; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%); transform: translate(-50%,-50%); transition: opacity 0.3s; }
+
+  /* FORM FOCUS LINE */
+  .divider-line { height: 0.5px; background: var(--gray-3); width: 0; transition: width 1.2s cubic-bezier(0.22,1,0.36,1); }
+  .divider-line.drawn { width: 100%; }
+
+  /* FOOTER SLIDE UP */
+  footer { border-top: 0.5px solid var(--gray-3); padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; transform: translateY(40px); opacity: 0; transition: transform 0.7s cubic-bezier(0.22,1,0.36,1), opacity 0.7s ease; }
+  footer.revealed { transform: none; opacity: 1; }
+
+  /* ODOMETER STATS */
+  .stat-num { font-family: var(--serif); font-size: 1.75rem; color: var(--white); line-height: 1; margin-bottom: 0.35rem; font-variant-numeric: tabular-nums; }
+
+  /* FORM FOCUS LINE */
+  .form-field::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px; background: var(--white); transition: width 0.4s ease; }
+  .form-field:focus-within::after { width: 100%; }
+
+  /* BUTTON RIPPLE */
+  .btn { position: relative; overflow: hidden; }
+  .ripple { position: absolute; border-radius: 50%; background: rgba(255,255,255,0.25); transform: scale(0); animation: rippleAnim 0.6s linear; pointer-events: none; }
+  @keyframes rippleAnim { to { transform: scale(4); opacity: 0; } }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 3rem; border-bottom: 0.5px solid var(--gray-3); background: rgba(0,0,0,0.88); backdrop-filter: blur(12px); }
+  .nav-logo { font-family: var(--serif); font-size: 1.15rem; letter-spacing: 0.02em; color: var(--white); cursor: pointer; }
+  .nav-logo span { color: var(--gray-6); font-style: italic; }
+  .nav-links { display: flex; gap: 2.5rem; }
+  .nav-links a { font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-6); transition: color 0.2s; position: relative; padding-bottom: 2px; }
+  .nav-links a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 0.5px; background: var(--white); transition: width 0.3s ease; }
+  .nav-links a:hover { color: var(--white); }
+  .nav-links a:hover::after { width: 100%; }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+  .hamburger span { display: block; width: 22px; height: 1px; background: var(--white); transition: all 0.3s; }
+  .mobile-menu { display: none; flex-direction: column; gap: 0; position: fixed; top: 57px; left: 0; right: 0; bottom: 0; background: var(--black); z-index: 99; padding: 2rem 3rem; border-top: 0.5px solid var(--gray-3); }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { font-size: 1.5rem; font-family: var(--serif); color: var(--gray-6); padding: 1.25rem 0; border-bottom: 0.5px solid var(--gray-3); transition: color 0.2s; }
+  .mobile-menu a:hover { color: var(--white); }
+
+  /* MAIN SITE */
+  #main-site { transition: opacity 0.4s ease; }
+  #main-site.hidden { opacity: 0; pointer-events: none; position: absolute; }
+
+  /* SECTIONS */
+  section { padding: 7rem 3rem; }
+  .section-label { font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gray-5); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 1rem; transition: color 0.3s; }
+  .section-label.counted { color: var(--white); }
+  .section-label::after { content: ''; flex: 1; max-width: 60px; height: 0.5px; background: var(--gray-4); }
+
+  /* HERO */
+  #hero { min-height: 100vh; display: grid; grid-template-columns: 1fr; align-items: start; gap: 4rem; padding-top: 8rem; padding-bottom: 2rem; position: relative; overflow: hidden; }
+  .hero-grid-bg { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; }
+  .hero-content { position: relative; z-index: 1; }
+  .hero-eyebrow { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray-5); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; }
+  .hero-eyebrow::before { content: ''; width: 32px; height: 0.5px; background: var(--gray-5); }
+  .hero-name { font-family: var(--serif); font-size: clamp(3.5rem, 7vw, 6rem); line-height: 1.0; letter-spacing: -0.01em; margin-bottom: 0; color: var(--white); }
+  .hero-name em { font-style: italic; color: var(--gray-6); display: block; font-size: 0.75em; }
+  .hero-tagline { font-size: 1rem; color: var(--gray-6); line-height: 1.7; max-width: 460px; margin-bottom: 0.75rem; margin-top: 0.75rem; }
+  .hero-desc { font-size: 0.88rem; color: var(--gray-5); line-height: 1.75; max-width: 440px; margin-bottom: 1.5rem; }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn { display: inline-block; padding: 0.75rem 1.75rem; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; border: 0.5px solid var(--gray-4); color: var(--gray-7); transition: all 0.25s; cursor: pointer; background: transparent; font-family: var(--sans); }
+  .btn:hover { background: var(--white); color: var(--black); border-color: var(--white); }
+  .btn-ghost { border-color: var(--gray-3); color: var(--gray-5); }
+  .btn-ghost:hover { background: var(--gray-2); color: var(--white); border-color: var(--gray-4); }
+  .hero-image-side { position: relative; z-index: 1; display: flex; align-items: flex-start; justify-content: flex-end; padding-top: 4rem; }
+  .hero-image-frame { width: 320px; aspect-ratio: 4/5; border: 0.5px solid var(--gray-3); background: var(--gray-1); position: relative; overflow: hidden; flex-shrink: 0; }
+  .hero-image-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; color: var(--gray-4); }
+  .hero-image-placeholder svg { opacity: 0.3; }
+  .hero-image-placeholder p { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; }
+  .hero-corner { position: absolute; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-5); }
+  .hero-corner.tl { top: 1rem; left: 1rem; }
+  .hero-corner.br { bottom: 1rem; right: 1rem; }
+  .hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 0.5px solid var(--gray-3); margin-top: 1.5rem; }
+  .stat { padding: 1.25rem 1.5rem; border-right: 0.5px solid var(--gray-3); }
+  .stat:last-child { border-right: none; }
+  .stat-num { font-family: var(--serif); font-size: 1.75rem; color: var(--white); line-height: 1; margin-bottom: 0.35rem; }
+  .stat-label { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-5); }
+
+  /* ABOUT */
+  #about { border-top: 0.5px solid var(--gray-3); padding-top: 4rem; }
+  .about-grid { display: grid; grid-template-columns: 200px 1fr; gap: 5rem; align-items: start; }
+  .about-sticky { position: sticky; top: 8rem; }
+  .about-title { font-family: var(--serif); font-size: 2.5rem; line-height: 1; color: var(--white); margin-bottom: 1.5rem; }
+  .about-bio { font-size: 1rem; color: var(--gray-6); line-height: 1.85; max-width: 600px; margin-bottom: 2.5rem; }
+  .about-bio p + p { margin-top: 1.25rem; }
+  .edu-card { border: 0.5px solid var(--gray-3); padding: 1.75rem 2rem; max-width: 500px; position: relative; }
+  .edu-card::before { content: 'Education'; position: absolute; top: -0.6rem; left: 1.5rem; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray-5); background: var(--black); padding: 0 0.5rem; }
+  .edu-degree { font-size: 1rem; color: var(--white); margin-bottom: 0.35rem; }
+  .edu-school { font-size: 0.88rem; color: var(--gray-6); margin-bottom: 0.75rem; }
+  .edu-year { font-size: 0.75rem; color: var(--gray-5); letter-spacing: 0.08em; }
+
+  /* EXPERIENCE */
+  #experience { border-top: 0.5px solid var(--gray-3); }
+  .exp-header { margin-bottom: 4rem; }
+  .exp-title { font-family: var(--serif); font-size: 2.5rem; color: var(--white); }
+  .exp-list { display: flex; flex-direction: column; gap: 0; }
+  .exp-item { display: grid; grid-template-columns: 220px 1fr; border-top: 0.5px solid var(--gray-3); padding: 2.5rem 0; gap: 4rem; }
+  .exp-item:last-child { border-bottom: 0.5px solid var(--gray-3); }
+  .exp-date { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-5); margin-bottom: 0.5rem; }
+  .exp-role { font-size: 0.88rem; color: var(--gray-6); }
+  .exp-company { font-family: var(--serif); font-size: 1.5rem; color: var(--white); margin-bottom: 1.25rem; }
+  .exp-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .tag { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; border: 0.5px solid var(--gray-3); color: var(--gray-5); padding: 0.35rem 0.75rem; }
+
+  /* PROJECTS */
+  #projects { border-top: 0.5px solid var(--gray-3); }
+  .proj-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 4rem; flex-wrap: wrap; gap: 1rem; }
+  .proj-title { font-family: var(--serif); font-size: 2.5rem; color: var(--white); }
+  .proj-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 0.5px solid var(--gray-3); }
+  .proj-card { padding: 2.5rem 2.25rem; border-right: 0.5px solid var(--gray-3); border-bottom: 0.5px solid var(--gray-3); position: relative; overflow: hidden; transition: background 0.3s; cursor: pointer; }
+  .proj-card:hover { background: var(--gray-1); }
+  .proj-card:nth-child(2n) { border-right: none; }
+  .proj-card:nth-last-child(-n+2) { border-bottom: none; }
+  .proj-thumb { width: 100%; aspect-ratio: 16/9; background: var(--gray-2); border: 0.5px solid var(--gray-3); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem; position: relative; overflow: hidden; cursor: pointer; }
+  .proj-thumb:hover { border-color: var(--gray-5); }
+  .proj-thumb:hover .proj-thumb-inner { opacity: 1; }
+  .proj-thumb-inner { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; opacity: 0.4; transition: opacity 0.2s; }
+  .proj-thumb svg { display: block; }
+  .proj-thumb-label { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray-5); }
+  .proj-thumb-corner { position: absolute; bottom: 0.6rem; right: 0.75rem; font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray-4); }
+  .proj-number { font-family: var(--serif); font-size: 0.85rem; color: var(--gray-4); margin-bottom: 1.25rem; font-style: italic; }
+  .proj-name { font-family: var(--serif); font-size: 1.35rem; color: var(--white); line-height: 1.25; margin-bottom: 1rem; }
+  .proj-desc { font-size: 0.88rem; color: var(--gray-6); line-height: 1.75; margin-bottom: 1.5rem; }
+  .proj-tools { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
+  .tool-tag { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; border: 0.5px solid var(--gray-3); color: var(--gray-5); padding: 0.25rem 0.6rem; }
+  .proj-arrow { position: absolute; bottom: 2rem; right: 2rem; font-size: 1rem; color: var(--gray-4); transition: all 0.2s; }
+  .proj-card:hover .proj-arrow { color: var(--white); transform: translate(3px, -3px); }
+
+  /* SKILL BADGES */
+  .badge-strip { display: flex; flex-wrap: wrap; gap: 0; border: 0.5px solid var(--gray-3); margin-bottom: 3rem; }
+  .badge {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 0.75rem; padding: 1.75rem 2rem;
+    border-right: 0.5px solid var(--gray-3);
+    flex: 1; min-width: 100px;
+    transition: background 0.25s;
+  }
+  .badge:last-child { border-right: none; }
+  .badge:hover { background: var(--gray-1); }
+  .badge svg { opacity: 0.5; transition: opacity 0.25s; }
+  .badge:hover svg { opacity: 1; }
+  .badge-name { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray-5); text-align: center; transition: color 0.25s; }
+  .badge:hover .badge-name { color: var(--gray-7); }
+
+  /* SKILLS */
+  #skills { border-top: 0.5px solid var(--gray-3); }
+  .skills-header { margin-bottom: 4rem; }
+  .skills-title { font-family: var(--serif); font-size: 2.5rem; color: var(--white); }
+  .skills-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 0.5px solid var(--gray-3); }
+  .skill-group { padding: 2rem 1.75rem; border-right: 0.5px solid var(--gray-3); }
+  .skill-group:last-child { border-right: none; }
+  .skill-group-name { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray-5); margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 0.5px solid var(--gray-3); }
+  .skill-list { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+  .skill-list li { font-size: 0.88rem; color: var(--gray-6); display: flex; align-items: center; gap: 0.6rem; }
+  .skill-list li svg { opacity: 0.4; flex-shrink: 0; }
+
+  /* CONTACT */
+  #contact { border-top: 0.5px solid var(--gray-3); }
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start; }
+  .contact-headline { font-family: var(--serif); font-size: clamp(2.5rem, 5vw, 4rem); color: var(--white); line-height: 1.1; margin-bottom: 0.5rem; }
+  .contact-headline em { font-style: italic; color: var(--gray-6); }
+  .contact-sub { font-size: 0.9rem; color: var(--gray-5); margin-bottom: 3rem; line-height: 1.7; }
+  .contact-info { list-style: none; display: flex; flex-direction: column; gap: 0; border-top: 0.5px solid var(--gray-3); }
+  .contact-info li { display: grid; grid-template-columns: 80px 1fr; padding: 1rem 0; border-bottom: 0.5px solid var(--gray-3); gap: 1.5rem; align-items: center; }
+  .contact-key { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-5); }
+  .contact-val { font-size: 0.9rem; color: var(--gray-7); }
+  .contact-val a:hover { color: var(--white); text-decoration: underline; }
+  .contact-form { display: flex; flex-direction: column; gap: 0; }
+  .form-field { position: relative; border-bottom: 0.5px solid var(--gray-3); }
+  .form-field:first-child { border-top: 0.5px solid var(--gray-3); }
+  .form-label { position: absolute; top: 1rem; left: 0; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-5); transition: all 0.2s; pointer-events: none; }
+  .form-field input, .form-field textarea { width: 100%; background: transparent; border: none; outline: none; color: var(--white); font-family: var(--sans); font-size: 0.95rem; padding: 1.75rem 0 0.75rem; resize: none; cursor: crosshair; }
+  .form-field textarea { min-height: 120px; }
+  .form-field input:focus ~ .form-label, .form-field input:not(:placeholder-shown) ~ .form-label, .form-field textarea:focus ~ .form-label, .form-field textarea:not(:placeholder-shown) ~ .form-label { top: 0.4rem; font-size: 0.62rem; color: var(--gray-4); }
+  .form-submit { margin-top: 1.5rem; display: flex; justify-content: flex-end; }
+
+  /* FOOTER */
+  footer { border-top: 0.5px solid var(--gray-3); padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  footer p { font-size: 0.75rem; color: var(--gray-5); letter-spacing: 0.05em; }
+  .footer-links { display: flex; gap: 1.5rem; }
+  .footer-links a { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray-5); transition: color 0.2s; }
+  .footer-links a:hover { color: var(--white); }
+
+  /* FADE IN / SLIDE UP */
+  .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .fade-in.visible { opacity: 1; transform: none; }
+  .slide-up { opacity: 0; transform: translateY(40px); transition: opacity 0.55s cubic-bezier(0.22,1,0.36,1), transform 0.55s cubic-bezier(0.22,1,0.36,1); }
+  .slide-up.visible { opacity: 1; transform: none; }
+
+  /* ALTERNATING SLIDE IN (left / right) */
+  .slide-left  { opacity: 0; transform: translateX(-52px); transition: opacity 0.65s cubic-bezier(0.22,1,0.36,1), transform 0.65s cubic-bezier(0.22,1,0.36,1); }
+  .slide-right { opacity: 0; transform: translateX( 52px); transition: opacity 0.65s cubic-bezier(0.22,1,0.36,1), transform 0.65s cubic-bezier(0.22,1,0.36,1); }
+  .slide-left.visible, .slide-right.visible { opacity: 1; transform: none; }
+
+  /* AMBIENT PARTICLE CANVAS */
+  #particle-canvas { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+
+  /* SVG SECTION RULE */
+  .section-rule { display: block; width: 100%; overflow: visible; margin-bottom: 1.5rem; }
+  .section-rule line { stroke: var(--gray-3); stroke-width: 0.5; stroke-dasharray: 3000; stroke-dashoffset: 3000; transition: stroke-dashoffset 1.6s cubic-bezier(0.22,1,0.36,1); }
+  .section-rule.drawn line { stroke-dashoffset: 0; }
+
+  /* PROJECT THUMB CLIP DISTORTION */
+  .proj-thumb { clip-path: inset(0% 0% 0% 0%); transition: clip-path 0.45s cubic-bezier(0.22,1,0.36,1); }
+  .proj-card:hover .proj-thumb { clip-path: inset(3% 2% 3% 2% round 3px); }
+
+  /* ELASTIC STAT NUMS */
+  .stat-num { display: inline-block; transition: transform 0.1s; }
+
+  /* Hide thumb placeholder when real image is present */
+  .proj-thumb img[src]:not([src=""]) ~ .proj-thumb-inner { display: none; }
+
+  /* TYPEWRITER */
+  .typewriter-cursor { display: inline-block; width: 3px; height: 0.85em; background: var(--gray-5); margin-left: 4px; vertical-align: middle; animation: blink 1s step-end infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* ============================================================
+     PROJECT DETAIL VIEW
+  ============================================================ */
+  #project-detail {
+    display: none;
+    min-height: 100vh;
+    padding-top: 5rem;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  #project-detail.visible { display: block; opacity: 1; }
+
+  .detail-back {
+    display: inline-flex; align-items: center; gap: 0.75rem;
+    font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--gray-5); padding: 2rem 3rem 0;
+    cursor: pointer; transition: color 0.2s;
+    border: none; background: none; font-family: var(--sans);
+  }
+  .detail-back:hover { color: var(--white); }
+  .detail-back::before { content: '←'; font-size: 1rem; }
+
+  .detail-hero {
+    padding: 2.5rem 3rem 0;
+    border-bottom: 0.5px solid var(--gray-3);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: end;
+    padding-bottom: 3rem;
+  }
+  .detail-num { font-family: var(--serif); font-style: italic; color: var(--gray-5); font-size: 1rem; margin-bottom: 0.75rem; }
+  .detail-title { font-family: var(--serif); font-size: clamp(2rem, 4vw, 3.5rem); color: var(--white); line-height: 1.1; margin-bottom: 1.25rem; }
+  .detail-meta-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .detail-right { display: flex; flex-direction: column; gap: 1.5rem; justify-content: flex-end; }
+  .detail-meta-block {}
+  .detail-meta-label { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray-5); margin-bottom: 0.4rem; }
+  .detail-meta-val { font-size: 0.9rem; color: var(--gray-7); }
+
+  .detail-body { padding: 0 3rem; }
+
+  /* Image + Drawing side by side */
+  .detail-visuals {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-bottom: 0.5px solid var(--gray-3);
+    border-left: 0.5px solid var(--gray-3);
+    border-right: 0.5px solid var(--gray-3);
+  }
+  .detail-visual-block {
+    padding: 2rem;
+    border-right: 0.5px solid var(--gray-3);
+  }
+  .detail-visual-block:last-child { border-right: none; }
+  .detail-visual-label {
+    font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--gray-5); margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .detail-visual-label::after { content: ''; flex: 1; height: 0.5px; background: var(--gray-3); }
+
+  .detail-placeholder {
+    width: 100%; aspect-ratio: 4/3;
+    background: var(--gray-1); border: 0.5px solid var(--gray-3);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 0.75rem; position: relative;
+  }
+  .detail-placeholder svg { opacity: 0.15; }
+  .detail-placeholder-text { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray-5); }
+  .detail-placeholder-sub { font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray-4); }
+
+  /* Doc-style second image — normal half-width, contain fit */
+  .detail-placeholder--doc { aspect-ratio: 4/3; background: #ffffff; border-color: var(--gray-3); }
+
+  /* Drawing placeholder — blueprint feel */
+  .detail-drawing {
+    width: 100%; aspect-ratio: 4/3;
+    background: var(--gray-1); border: 0.5px solid var(--gray-3);
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .drawing-grid-lines {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  .drawing-content {
+    position: relative; z-index: 1; text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
+  }
+  .drawing-content svg { opacity: 0.2; }
+  .drawing-content p { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray-5); }
+  .drawing-content span { font-size: 0.62rem; letter-spacing: 0.08em; color: var(--gray-4); }
+  .drawing-border-tl, .drawing-border-br {
+    position: absolute; width: 20px; height: 20px;
+  }
+  .drawing-border-tl { top: 12px; left: 12px; border-top: 1px solid var(--gray-4); border-left: 1px solid var(--gray-4); }
+  .drawing-border-br { bottom: 12px; right: 12px; border-bottom: 1px solid var(--gray-4); border-right: 1px solid var(--gray-4); }
+
+  /* Description section */
+  .detail-desc-section {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 5rem;
+    padding: 3.5rem 0;
+    border-bottom: 0.5px solid var(--gray-3);
+  }
+  .detail-section-title { font-family: var(--serif); font-size: 1rem; color: var(--gray-5); position: sticky; top: 8rem; font-style: italic; }
+  .detail-desc-text { font-size: 1rem; color: var(--gray-6); line-height: 1.9; }
+  .detail-desc-text p + p { margin-top: 1.25rem; }
+
+  /* Specs row */
+  .detail-specs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border: 0.5px solid var(--gray-3);
+    margin: 3rem 0;
+  }
+  .detail-spec { padding: 1.5rem 1.75rem; border-right: 0.5px solid var(--gray-3); }
+  .detail-spec:last-child { border-right: none; }
+  .detail-spec-label { font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray-5); margin-bottom: 0.5rem; }
+  .detail-spec-val { font-size: 0.95rem; color: var(--gray-7); }
+
+  /* Outcomes */
+  .detail-outcomes { padding: 3rem 0 5rem; }
+  .detail-outcomes-title { font-family: var(--serif); font-size: 1.5rem; color: var(--white); margin-bottom: 2rem; }
+  .detail-outcome-list { list-style: none; display: flex; flex-direction: column; gap: 0; border-top: 0.5px solid var(--gray-3); }
+  .detail-outcome-list li { padding: 1rem 0; border-bottom: 0.5px solid var(--gray-3); font-size: 0.9rem; color: var(--gray-6); display: flex; align-items: flex-start; gap: 1rem; }
+  .detail-outcome-list li::before { content: '—'; color: var(--gray-4); flex-shrink: 0; margin-top: 0.05rem; }
+
+  /* ADD PROJECT MODAL */
+  .ap-field { position:relative; border-bottom:0.5px solid #262626; }
+  .ap-field:first-child { border-top:0.5px solid #262626; }
+  .ap-field input, .ap-field textarea { width:100%; background:transparent; border:none; outline:none; color:#fff; font-family:'DM Sans',sans-serif; font-size:0.95rem; padding:1.75rem 0 0.75rem; resize:none; cursor:text; }
+  .ap-field label { position:absolute; top:1rem; left:0; font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; color:#737373; transition:all 0.2s; pointer-events:none; }
+  .ap-field input:focus ~ label, .ap-field input:not(:placeholder-shown) ~ label,
+  .ap-field textarea:focus ~ label, .ap-field textarea:not(:placeholder-shown) ~ label { top:0.4rem; font-size:0.62rem; color:#404040; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 2px; }
+  ::-webkit-scrollbar-track { background: var(--black); }
+  ::-webkit-scrollbar-thumb { background: var(--gray-3); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 1.25rem 1.5rem; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    section { padding: 5rem 1.5rem; }
+    #hero { grid-template-columns: 1fr; padding-top: 7rem; }
+    .hero-image-side { order: -1; }
+    .hero-image-frame { max-width: 280px; aspect-ratio: 1/1; margin: 0 auto; }
+    .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .about-sticky { position: static; }
+    .exp-item { grid-template-columns: 1fr; gap: 0.75rem; }
+    .proj-grid { grid-template-columns: 1fr; }
+    .proj-card { border-right: none !important; }
+    .proj-card:last-child { border-bottom: none !important; }
+    .badge-strip { flex-wrap: wrap; }
+    .badge { min-width: calc(33% - 1px); border-bottom: 0.5px solid var(--gray-3); }
+    .skills-grid { grid-template-columns: 1fr 1fr; }
+    .skill-group:nth-child(2n) { border-right: none; }
+    .skill-group:nth-child(n+3) { border-top: 0.5px solid var(--gray-3); }
+    .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .hero-stats { grid-template-columns: 1fr 1fr 1fr; }
+    footer { padding: 1.5rem; }
+    .detail-back { padding: 1.5rem 1.5rem 0; }
+    .detail-hero { grid-template-columns: 1fr; gap: 2rem; padding: 1.5rem 1.5rem 2rem; }
+    .detail-body { padding: 0 1.5rem; }
+    .detail-visuals { grid-template-columns: 1fr; }
+    .detail-visual-block { border-right: none; border-bottom: 0.5px solid var(--gray-3); }
+    .detail-visual-block:last-child { border-bottom: none; }
+    .detail-desc-section { grid-template-columns: 1fr; gap: 1.5rem; }
+    .detail-section-title { position: static; }
+    .detail-specs { grid-template-columns: 1fr 1fr; }
+    .detail-spec:nth-child(2n) { border-right: none; }
+    .detail-spec:nth-child(n+3) { border-top: 0.5px solid var(--gray-3); }
+  }
+  @media (max-width: 480px) {
+    .skills-grid { grid-template-columns: 1fr; }
+    .skill-group { border-right: none !important; border-top: 0.5px solid var(--gray-3); }
+    .skill-group:first-child { border-top: none; }
+    .hero-stats { grid-template-columns: 1fr; }
+    .stat { border-right: none; border-bottom: 0.5px solid var(--gray-3); }
+    .stat:last-child { border-bottom: none; }
+    .detail-specs { grid-template-columns: 1fr; }
+    .detail-spec { border-right: none; border-bottom: 0.5px solid var(--gray-3); }
+    .detail-spec:last-child { border-bottom: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SCROLL PROGRESS -->
+<div id="scroll-progress"></div>
+<!-- PAGE WIPE -->
+<div id="page-wipe"></div>
+<!-- SPOTLIGHT -->
+<div id="spotlight"></div>
+<!-- CUSTOM CURSOR -->
+<div id="cursor"></div>
+<div id="cursor-dot"></div>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-logo" onclick="closeDetail()">Tanay Vimal <span>/ ME</span></span>
+  <div class="nav-links">
+    <a href="#about" onclick="navTo('about')">About</a>
+    <a href="#experience" onclick="navTo('experience')">Experience</a>
+    <a href="#projects" onclick="navTo('projects')">Projects</a>
+    <a href="#skills" onclick="navTo('skills')">Skills</a>
+    <a href="#contact" onclick="navTo('contact')">Contact</a>
+  </div>
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="toggleMenu();navTo('about')">About</a>
+  <a href="#experience" onclick="toggleMenu();navTo('experience')">Experience</a>
+  <a href="#projects" onclick="toggleMenu();navTo('projects')">Projects</a>
+  <a href="#skills" onclick="toggleMenu();navTo('skills')">Skills</a>
+  <a href="#contact" onclick="toggleMenu();navTo('contact')">Contact</a>
+</div>
+
+<!-- ============================================================
+     MAIN SITE
+============================================================ -->
+<div id="main-site">
+
+<section id="hero">
+  <canvas id="particle-canvas"></canvas>
+  <div class="hero-grid-bg"></div>
+  <div class="hero-content fade-in" style="grid-column: 1 / -1;">
+    <div class="hero-eyebrow">Mechanical Engineering Student</div>
+    <!-- Name + Photo side by side -->
+    <div style="display: grid; grid-template-columns: 1fr 320px; align-items: start; gap: 2.5rem; margin-bottom: 0.75rem; position: relative;">
+      <h1 class="hero-name" style="margin-bottom: 0;">
+        <span id="typewriter-text"></span><span class="typewriter-cursor" id="tw-cursor"></span>
+        <em id="hero-subtitle" style="font-size: 0.32em; letter-spacing: 0.15em; text-transform: uppercase; font-style: normal; color: var(--gray-5); display: block; margin-top: 0.4rem; opacity:0; transform:translateY(8px); transition: opacity 0.5s ease, transform 0.5s ease;">Driven by Design, Engineering, and Innovation</em>
+      </h1>
+      <div style="position: relative; height: 0;">
+        <div class="hero-image-frame" style="position: absolute; top: 0; right: 0;">
+          <img src="https://i.postimg.cc/T35RxjSc/Screenshot-2026-06-01-135134.png" alt="Tanay Vimal" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%) contrast(1.05);" />
+          <div class="hero-corner tl">01 / Portrait</div>
+          <div class="hero-corner br">Bangalore, IN</div>
+        </div>
+      </div>
+    </div>
+    <p class="hero-tagline" id="hero-tagline" style="opacity:0; transform:translateY(10px); transition: opacity 0.5s ease, transform 0.5s ease;">Focused on CAD Design, Manufacturing Systems, and Automotive Engineering.</p>
+    <p class="hero-desc" id="hero-desc" style="opacity:0; transform:translateY(10px); transition: opacity 0.5s ease, transform 0.5s ease;">I design, analyze, and build engineering solutions through CAD modeling, technical drawings, and practical manufacturing experience.</p>
+    <div class="hero-btns">
+      <a href="#projects" class="btn">View Projects</a>
+      <a href="#contact" class="btn btn-ghost">Contact Me</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num" id="stat-projects">0</div><div class="stat-label">Projects</div></div>
+      <div class="stat"><div class="stat-num" id="stat-roles">0</div><div class="stat-label">Roles</div></div>
+      <div class="stat"><div class="stat-num" id="stat-grad">0</div><div class="stat-label">Graduation</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <span class="ticker-item">Fusion 360</span>
+    <span class="ticker-item">AutoCAD</span>
+    <span class="ticker-item">MATLAB</span>
+    <span class="ticker-item">Python</span>
+    <span class="ticker-item">CAD Design</span>
+    <span class="ticker-item">Engineering Drawing</span>
+    <span class="ticker-item">Automotive Engineering</span>
+    <span class="ticker-item">Mechanical Design</span>
+    <span class="ticker-item">Manufacturing Systems</span>
+    <span class="ticker-item">Product Assembly</span>
+    <span class="ticker-item">Technical Documentation</span>
+    <span class="ticker-item">3D Modelling</span>
+    <span class="ticker-item">Fusion 360</span>
+    <span class="ticker-item">AutoCAD</span>
+    <span class="ticker-item">MATLAB</span>
+    <span class="ticker-item">Python</span>
+    <span class="ticker-item">CAD Design</span>
+    <span class="ticker-item">Engineering Drawing</span>
+    <span class="ticker-item">Automotive Engineering</span>
+    <span class="ticker-item">Mechanical Design</span>
+    <span class="ticker-item">Manufacturing Systems</span>
+    <span class="ticker-item">Product Assembly</span>
+    <span class="ticker-item">Technical Documentation</span>
+    <span class="ticker-item">3D Modelling</span>
+  </div>
+</div>
+
+<section id="about">
+  <svg class="section-rule" height="1" viewBox="0 0 1200 1"><line x1="0" y1="0.5" x2="1200" y2="0.5"/></svg>
+  <div class="about-grid fade-in">
+    <div class="about-sticky">
+      <div class="section-label">01</div>
+      <h2 class="about-title">About</h2>
+    </div>
+    <div>
+      <div class="about-bio">
+        <p>I am Tanay Vimal, a Mechanical Engineering student at Amrita School of Engineering, Bangalore, with a strong passion for automobiles, manufacturing systems, and mechanical design. My interests span engineering graphics, 3D modeling, product development, and the study of automotive technologies, where I enjoy understanding how engineering principles are applied to create efficient and reliable systems.</p>
+        <p>I am particularly interested in using CAD tools and technical design methodologies to transform ideas into practical solutions. Constantly exploring new technologies and design approaches, I aim to deepen my knowledge of manufacturing processes and vehicle engineering while developing the skills needed to tackle real-world engineering challenges.</p>
+        <p>My long-term goal is to contribute to the automotive industry through innovative design, manufacturing excellence, and process optimization, helping create smarter and more efficient engineering solutions for the future.</p>
+      </div>
+      <div class="edu-card">
+        <p class="edu-degree">B.Tech Mechanical Engineering</p>
+        <p class="edu-school">Amrita School of Engineering, Bangalore</p>
+        <p class="edu-year">Expected Graduation — 2029</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <svg class="section-rule" height="1" viewBox="0 0 1200 1"><line x1="0" y1="0.5" x2="1200" y2="0.5"/></svg>
+  <div class="exp-header fade-in">
+    <div class="section-label">02</div>
+    <h2 class="exp-title">Experience</h2>
+  </div>
+  <div class="exp-list">
+    <div class="exp-item fade-in">
+      <div class="exp-meta">
+        <div class="exp-date">Jul 2025 — Present</div>
+        <div class="exp-role">Apprentice</div>
+      </div>
+      <div class="exp-detail">
+        <div class="exp-company">TamSys India Pvt Ltd</div>
+        <div class="exp-tags">
+          <span class="tag">Engineering Drawings</span>
+          <span class="tag">Drag Chain Assembly</span>
+          <span class="tag">Technical Documentation</span>
+          <span class="tag">Quality Inspection</span>
+          <span class="tag">Mechanical Assembly</span>
+        </div>
+      </div>
+    </div>
+    <div class="exp-item fade-in">
+      <div class="exp-meta">
+        <div class="exp-date">Jul 2025 — Feb 2026</div>
+        <div class="exp-role">Braking Team Member</div>
+      </div>
+      <div class="exp-detail">
+        <div class="exp-company">Team Vegam</div>
+        <div class="exp-tags">
+          <span class="tag">Braking System Design</span>
+          <span class="tag">Component Selection</span>
+          <span class="tag">System Integration</span>
+          <span class="tag">Vehicle Safety</span>
+          <span class="tag">Team Collaboration</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <svg class="section-rule" height="1" viewBox="0 0 1200 1"><line x1="0" y1="0.5" x2="1200" y2="0.5"/></svg>
+  <div class="proj-header fade-in">
+    <div>
+      <div class="section-label">03</div>
+      <h2 class="proj-title">Projects</h2>
+    </div>
+  </div>
+  <div class="proj-grid fade-in">
+    <div class="proj-card" onclick="openDetail('gkdc')">
+      <div class="proj-thumb">
+        <img id="thumb-img-gkdc" src="https://i.postimg.cc/vZ7sYbyN/Whats-App-Image-2026-06-03-at-7-35-26-AM.jpg" style="display:block;width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" />
+        <div class="proj-thumb-inner">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="0.75"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="3" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="21"/><line x1="3" y1="12" x2="8" y2="12"/><line x1="16" y1="12" x2="21" y2="12"/></svg>
+          <span class="proj-thumb-label">Project Image</span>
+        </div>
+        <span class="proj-thumb-corner">01 / Braking System</span>
+      </div>
+      <div class="proj-number">01 —</div>
+      <h3 class="proj-name">GKDC 2026 Braking System</h3>
+      <p class="proj-desc">Designed and optimised the complete braking system for a competition vehicle. Responsible for system layout, component selection, and safety compliance.</p>
+      <div class="proj-tools">
+        <span class="tool-tag">Fusion 360</span>
+        <span class="tool-tag">Braking Systems</span>
+        <span class="tool-tag">Competition Vehicle</span>
+      </div>
+      <span class="proj-arrow">↗</span>
+    </div>
+    <div class="proj-card" onclick="openDetail('piston')">
+      <div class="proj-thumb">
+        <img id="thumb-img-piston" src="https://i.postimg.cc/v8L9R6xy/Screenshot-2026-06-03-075308.png" style="display:block;width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" />
+        <div class="proj-thumb-inner">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="0.75"><rect x="3" y="3" width="18" height="18" rx="1"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+          <span class="proj-thumb-label">Project Image</span>
+        </div>
+        <span class="proj-thumb-corner">02 / Assembly</span>
+      </div>
+      <div class="proj-number">02 —</div>
+      <h3 class="proj-name">Piston & Crankshaft Assembly</h3>
+      <p class="proj-desc">Mechanical assembly and motion study project exploring the kinematics of internal combustion engine components.</p>
+      <div class="proj-tools">
+        <span class="tool-tag">CAD Modelling</span>
+        <span class="tool-tag">Motion Study</span>
+        <span class="tool-tag">Assembly Design</span>
+      </div>
+      <span class="proj-arrow">↗</span>
+    </div>
+    <div class="proj-card" onclick="openDetail('caliper')">
+      <div class="proj-thumb">
+        <img id="thumb-img-caliper" src="https://i.postimg.cc/gkTDxZzh/Screenshot-2026-06-03-073854.png" style="display:block;width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" />
+        <div class="proj-thumb-inner">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="0.75"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          <span class="proj-thumb-label">Project Image</span>
+        </div>
+        <span class="proj-thumb-corner">03 / Brake Calipers</span>
+      </div>
+      <div class="proj-number">03 —</div>
+      <h3 class="proj-name">Brake Calipers</h3>
+      <p class="proj-desc">Design and analysis of braking caliper components. Detailed modelling of caliper geometry, dimensional tolerancing, and structural considerations.</p>
+      <div class="proj-tools">
+        <span class="tool-tag">CAD Design</span>
+        <span class="tool-tag">Structural Analysis</span>
+        <span class="tool-tag">Technical Drawing</span>
+      </div>
+      <span class="proj-arrow">↗</span>
+    </div>
+    <div class="proj-card" onclick="openDetail('matlab')">
+      <div class="proj-thumb">
+        <img id="thumb-img-matlab" src="https://i.postimg.cc/vBw1kQQM/Whats-App-Image-2026-05-04-at-10-24-00-PM.jpg" style="display:block;width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" />
+        <div class="proj-thumb-inner">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="0.75"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          <span class="proj-thumb-label">Project Image</span>
+        </div>
+        <span class="proj-thumb-corner">04 / MATLAB</span>
+      </div>
+      <div class="proj-number">04 —</div>
+      <h3 class="proj-name">Parabolic Trajectory Modelling</h3>
+      <p class="proj-desc">Computational modelling and visualisation of parabolic trajectories using MATLAB. Simulation of projectile motion with variable parameters.</p>
+      <div class="proj-tools">
+        <span class="tool-tag">MATLAB</span>
+        <span class="tool-tag">Simulation</span>
+        <span class="tool-tag">Data Visualisation</span>
+      </div>
+      <span class="proj-arrow">↗</span>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <svg class="section-rule" height="1" viewBox="0 0 1200 1"><line x1="0" y1="0.5" x2="1200" y2="0.5"/></svg>
+  <div class="skills-header fade-in">
+    <div class="section-label">04</div>
+    <h2 class="skills-title">Skills</h2>
+  </div>
+  <div class="badge-strip fade-in">
+    <!-- Fusion 360 -->
+    <div class="badge">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 4C9.373 4 4 9.373 4 16s5.373 12 12 12 12-5.373 12-12S22.627 4 16 4z" stroke="white" stroke-width="1" fill="none"/>
+        <path d="M16 9v14M9 16h14" stroke="white" stroke-width="1"/>
+        <circle cx="16" cy="16" r="3" stroke="white" stroke-width="1" fill="none"/>
+      </svg>
+      <span class="badge-name">Fusion 360</span>
+    </div>
+    <!-- AutoCAD -->
+    <div class="badge">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="4" width="24" height="24" rx="2" stroke="white" stroke-width="1" fill="none"/>
+        <path d="M10 22l6-12 6 12" stroke="white" stroke-width="1" stroke-linecap="round"/>
+        <path d="M12 18h8" stroke="white" stroke-width="1" stroke-linecap="round"/>
+      </svg>
+      <span class="badge-name">AutoCAD</span>
+    </div>
+    <!-- MATLAB -->
+    <div class="badge">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 24 L10 14 L14 19 L19 10 L28 24" stroke="white" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <rect x="4" y="4" width="24" height="24" rx="1" stroke="white" stroke-width="0.75" fill="none"/>
+      </svg>
+      <span class="badge-name">MATLAB</span>
+    </div>
+    <!-- Python -->
+    <div class="badge">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 4c-3.5 0-6 1.2-6 3v3h6v1H8c-1.8 0-4 1-4 5s2 6 4 6h2v-3c0-2 1.5-3 4-3h5c2 0 3-1 3-3V7c0-2-2.5-3-6-3z" stroke="white" stroke-width="1" fill="none" stroke-linejoin="round"/>
+        <path d="M16 28c3.5 0 6-1.2 6-3v-3h-6v-1h8c1.8 0 4-1 4-5s-2-6-4-6h-2v3c0 2-1.5 3-4 3h-5c-2 0-3 1-3 3v5c0 2 2.5 3 6 3z" stroke="white" stroke-width="1" fill="none" stroke-linejoin="round"/>
+        <circle cx="13" cy="8" r="1" fill="white"/>
+        <circle cx="19" cy="24" r="1" fill="white"/>
+      </svg>
+      <span class="badge-name">Python</span>
+    </div>
+    <!-- Engineering Drawing -->
+    <div class="badge">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="22" height="22" rx="1" stroke="white" stroke-width="1" fill="none"/>
+        <line x1="5" y1="11" x2="27" y2="11" stroke="white" stroke-width="0.75"/>
+        <line x1="11" y1="11" x2="11" y2="27" stroke="white" stroke-width="0.75"/>
+        <line x1="14" y1="17" x2="24" y2="17" stroke="white" stroke-width="0.75"/>
+        <line x1="14" y1="21" x2="21" y2="21" stroke="white" stroke-width="0.75"/>
+      </svg>
+      <span class="badge-name">Eng. Drawing</span>
+    </div>
+    <!-- CAD / 3D -->
+    <div class="badge">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 4l11 6v12l-11 6L5 22V10z" stroke="white" stroke-width="1" fill="none" stroke-linejoin="round"/>
+        <path d="M16 4v20M5 10l11 6 11-6" stroke="white" stroke-width="0.75" stroke-linecap="round"/>
+      </svg>
+      <span class="badge-name">3D Modelling</span>
+    </div>
+  </div>
+
+  <div class="skills-grid fade-in">
+    <div class="skill-group">
+      <div class="skill-group-name">CAD & Design</div>
+      <ul class="skill-list">
+        <li>
+          <svg width="14" height="14" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="16" cy="16" r="11"/><circle cx="16" cy="16" r="4"/><line x1="16" y1="5" x2="16" y2="10"/><line x1="16" y1="22" x2="16" y2="27"/><line x1="5" y1="16" x2="10" y2="16"/><line x1="22" y1="16" x2="27" y2="16"/></svg>
+          Fusion 360
+        </li>
+        <li>
+          <svg width="14" height="14" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="24" height="24" rx="2"/><path d="M10 22l6-12 6 12"/><path d="M12 18h8"/></svg>
+          AutoCAD
+        </li>
+      </ul>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-name">Engineering</div>
+      <ul class="skill-list">
+        <li>
+          <svg width="14" height="14" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="5" width="22" height="22" rx="1"/><line x1="5" y1="11" x2="27" y2="11"/><line x1="11" y1="11" x2="11" y2="27"/></svg>
+          Engineering Drawing
+        </li>
+        <li>
+          <svg width="14" height="14" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 4l11 6v12l-11 6L5 22V10z"/><path d="M16 4v20M5 10l11 6 11-6"/></svg>
+          Product Assembly
+        </li>
+        <li>
+          <svg width="14" height="14" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="16" cy="16" r="10"/><circle cx="16" cy="16" r="5"/></svg>
+          Mechanical Design
+        </li>
+        <li>
+          <svg width="14" height="14" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 6h16v20H8z"/><line x1="11" y1="11" x2="21" y2="11"/><line x1="11" y1="15" x2="21" y2="15"/><line x1="11" y1="19" x2="17" y2="19"/></svg>
+          Technical Documentation
+        </li>
+      </ul>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-name">Tools</div>
+      <ul class="skill-list">
+        <li>
+          <svg width="14" height="14" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 24L10 14 14 19 19 10 28 24"/></svg>
+          MATLAB
+        </li>
+        <li>
+          <svg width="14" height="14" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 6c-3 0-5 1-5 2.5v2.5h5v1H9c-1.5 0-3 .8-3 4s1.5 4.5 3 4.5h1.5v-2.5c0-1.5 1-2.5 3.5-2.5h4c1.5 0 2.5-.8 2.5-2.5V8.5C20.5 7 18.5 6 16 6z"/><path d="M16 26c3 0 5-1 5-2.5v-2.5h-5v-1h7c1.5 0 3-.8 3-4s-1.5-4.5-3-4.5H21.5V14c0 1.5-1 2.5-3.5 2.5h-4c-1.5 0-2.5.8-2.5 2.5v3.5C11.5 25 13.5 26 16 26z"/></svg>
+          Python
+        </li>
+      </ul>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-name">Professional</div>
+      <ul class="skill-list">
+        <li>
+          <svg width="14" height="14" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="8" width="24" height="18" rx="1"/><path d="M11 8V6a2 2 0 014 0v2"/><line x1="4" y1="15" x2="28" y2="15"/></svg>
+          Project Management
+        </li>
+        <li>
+          <svg width="14" height="14" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="5"/><circle cx="21" cy="11" r="5"/><path d="M4 26c0-4 3-6 7-6h10c4 0 7 2 7 6"/></svg>
+          Team Collaboration
+        </li>
+        <li>
+          <svg width="14" height="14" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="16" cy="13" r="7"/><path d="M16 20v7M12 24h8"/></svg>
+          Problem Solving
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <svg class="section-rule" height="1" viewBox="0 0 1200 1"><line x1="0" y1="0.5" x2="1200" y2="0.5"/></svg>
+  <div class="contact-grid fade-in">
+    <div class="contact-left">
+      <div class="section-label">05</div>
+      <h2 class="contact-headline">Let's<br><em>Connect</em></h2>
+      <p class="contact-sub">Open to internships, collaborations, and conversations about mechanical engineering and automotive design.</p>
+      <ul class="contact-info">
+        <li><span class="contact-key">Email</span><span class="contact-val"><a href="mailto:tanayvimal26@gmail.com">tanayvimal26@gmail.com</a></span></li>
+        <li><span class="contact-key">Phone</span><span class="contact-val"><a href="tel:+919591058034">+91 9591058034</a></span></li>
+        <li><span class="contact-key">Location</span><span class="contact-val">Bangalore, Karnataka, India</span></li>
+        <li><span class="contact-key">LinkedIn</span><span class="contact-val"><a href="https://linkedin.com/in/tanay-vimal-43b914380" target="_blank">tanay-vimal-43b914380</a></span></li>
+      </ul>
+    </div>
+    <div>
+      <div class="contact-form">
+        <div class="form-field"><input type="text" id="name" placeholder=" " autocomplete="name" /><label class="form-label" for="name">Name</label></div>
+        <div class="form-field"><input type="email" id="email" placeholder=" " autocomplete="email" /><label class="form-label" for="email">Email</label></div>
+        <div class="form-field"><textarea id="message" placeholder=" " rows="5"></textarea><label class="form-label" for="message">Message</label></div>
+        <div class="form-submit"><button class="btn" onclick="handleSubmit()">Send Message</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 Tanay Vimal — Mechanical Engineering</p>
+  <div class="footer-links">
+    <a href="mailto:tanayvimal26@gmail.com">Email</a>
+    <a href="https://linkedin.com/in/tanay-vimal-43b914380" target="_blank">LinkedIn</a>
+  </div>
+</footer>
+
+</div><!-- end #main-site -->
+
+<script>
+// Reveal footer on scroll
+const footerEl = document.querySelector('footer');
+const footerObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { footerEl.classList.add('revealed'); footerObs.disconnect(); } });
+}, { threshold: 0.1 });
+footerObs.observe(footerEl);
+</script>
+
+<!-- ============================================================
+     PROJECT DETAIL VIEW
+============================================================ -->
+<div id="project-detail">
+  <button class="detail-back" onclick="closeDetail()">Back to Projects</button>
+
+  <div class="detail-hero">
+    <div>
+      <div class="detail-num" id="d-num"></div>
+      <h1 class="detail-title" id="d-title"></h1>
+      <div class="detail-meta-row" id="d-tags"></div>
+    </div>
+    <div class="detail-right">
+      <div class="detail-meta-block">
+        <div class="detail-meta-label">Role</div>
+        <div class="detail-meta-val" id="d-role"></div>
+      </div>
+      <div class="detail-meta-block">
+        <div class="detail-meta-label">Tools Used</div>
+        <div class="detail-meta-val" id="d-tools"></div>
+      </div>
+      <div class="detail-meta-block">
+        <div class="detail-meta-label">Category</div>
+        <div class="detail-meta-val" id="d-category"></div>
+      </div>
+      <a id="d-github-link" href="#" target="_blank" class="btn" style="display:none; align-items:center; gap:0.5rem; margin-top:0.5rem;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+        View on GitHub
+      </a>
+    </div>
+  </div>
+
+  <div class="detail-body">
+    <!-- Visuals -->
+    <div class="detail-visuals">
+      <div class="detail-visual-block">
+        <div class="detail-visual-label">Project Image</div>
+        <div class="detail-placeholder">
+          <img id="detail-proj-img" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" />
+          <div id="detail-proj-placeholder">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="0.5"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span class="detail-placeholder-text">Project Image</span>
+            <span class="detail-placeholder-sub">Send image URL to add permanently</span>
+          </div>
+        </div>
+      </div>
+      <div class="detail-visual-block detail-visual-block--doc" id="detail-img2-block" style="display:none;">
+        <div class="detail-visual-label">Additional Image</div>
+        <div class="detail-placeholder detail-placeholder--doc">
+          <img id="detail-proj-img2" style="display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#ffffff;padding:0.5rem;" />
+        </div>
+      </div>
+      <div class="detail-visual-block" id="detail-draw-block">
+        <div class="detail-visual-label">Engineering Drawing</div>
+        <div class="detail-drawing">
+          <div class="drawing-grid-lines"></div>
+          <div class="drawing-border-tl"></div>
+          <div class="drawing-border-br"></div>
+          <img id="detail-draw-img" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:2;" />
+          <div class="drawing-content" id="detail-draw-placeholder">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="0.5"><line x1="5" y1="12" x2="19" y2="12"/><line x1="12" y1="5" x2="12" y2="19"/><rect x="4" y="4" width="16" height="16" rx="0"/><line x1="4" y1="8" x2="20" y2="8"/><line x1="8" y1="4" x2="8" y2="20"/></svg>
+            <p>Engineering Drawing</p>
+            <span>Send image URL to add permanently</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="detail-desc-section">
+      <div class="detail-section-title">Description</div>
+      <div class="detail-desc-text" id="d-desc"></div>
+    </div>
+
+    <!-- Specs -->
+    <div class="detail-specs">
+      <div class="detail-spec"><div class="detail-spec-label">Software</div><div class="detail-spec-val" id="d-spec-software"></div></div>
+      <div class="detail-spec"><div class="detail-spec-label">Type</div><div class="detail-spec-val" id="d-spec-type"></div></div>
+      <div class="detail-spec"><div class="detail-spec-label">Domain</div><div class="detail-spec-val" id="d-spec-domain"></div></div>
+      <div class="detail-spec"><div class="detail-spec-label">Status</div><div class="detail-spec-val" id="d-spec-status"></div></div>
+    </div>
+
+    <!-- Key Outcomes -->
+    <div class="detail-outcomes">
+      <div class="detail-outcomes-title">Key Outcomes</div>
+      <ul class="detail-outcome-list" id="d-outcomes"></ul>
+    </div>
+  </div>
+</div>
+
+<script>
+const projects = {
+  gkdc: {
+    num: '01 —',
+    title: 'GKDC 2026 Braking System',
+    role: 'Braking System Designer',
+    tools: 'Fusion 360',
+    category: 'Automotive Engineering',
+    tags: ['Fusion 360', 'Braking Systems', 'Competition Vehicle', 'Team Vegam'],
+    desc: `<p>The GKDC 2026 Braking System was designed and developed as part of Team Vegam's competition vehicle entry. The project involved full ownership of the braking system — from initial layout and component selection through to integration and compliance verification.</p><p>The design prioritised reliable stopping performance, weight efficiency, and adherence to competition safety regulations. Each component was selected and modelled with an emphasis on reducing unsprung mass while maintaining structural integrity under repeated high-load conditions.</p><p>The system was modelled entirely in Fusion 360, with detailed assemblies and technical drawings produced for fabrication and inspection purposes.</p>`,
+    specs: { software: 'Fusion 360', type: 'System Design', domain: 'Automotive', status: 'Completed' },
+    outcomes: ['Complete braking system designed from concept to CAD model', 'Component selection optimised for weight and performance', 'Full compliance with GKDC 2026 safety regulations', 'Technical drawings produced for fabrication', 'System integrated into full vehicle assembly'],
+    thumbImg: 'https://i.postimg.cc/vZ7sYbyN/Whats-App-Image-2026-06-03-at-7-35-26-AM.jpg',
+    projImg:  'https://i.postimg.cc/x89mZ000/1772641333700.jpg',
+    projImg2: 'https://i.postimg.cc/brYGT3RK/1772641331828.jpg',
+    drawImg:  null,
+    hideDrawing: true
+  },
+  piston: {
+    num: '02 —',
+    title: 'Piston & Crankshaft Assembly',
+    role: 'CAD Designer',
+    tools: 'CAD Software, Motion Study',
+    category: 'Mechanical Design',
+    tags: ['CAD Modelling', 'Motion Study', 'Assembly Design', 'ICE Components'],
+    desc: `<p>This project involved the detailed CAD modelling and motion study of a piston and crankshaft assembly — core components of an internal combustion engine. The goal was to accurately replicate the kinematic relationship between components and analyse the motion behaviour under simulated operating conditions.</p><p>Each component was modelled individually with precise dimensional tolerancing, then assembled with correct joint constraints to allow realistic motion simulation. The study demonstrated a clear understanding of reciprocating and rotational mechanics within engine systems.</p><p>The project served as both a technical exercise in assembly modelling and a study of mechanical kinematics applicable to real-world engine design.</p>`,
+    specs: { software: 'CAD / Motion Sim', type: 'Assembly & Motion Study', domain: 'Mechanical Engineering', status: 'Completed' },
+    outcomes: ['Full 3D assembly of piston, connecting rod, and crankshaft', 'Joint constraints defined for accurate kinematic simulation', 'Motion study demonstrating reciprocating-to-rotational conversion', 'Tolerance analysis applied to mating components', 'Technical drawings generated for each component'],
+    thumbImg: 'https://i.postimg.cc/v8L9R6xy/Screenshot-2026-06-03-075308.png',
+    projImg:  'https://i.postimg.cc/8ck2z61H/Adobe-Express-crankshaft-and-piston-Autodesk-Fusion-(Education-License)-2026-06-01-22-48-50-(1).gif',
+    projImg2: null,
+    drawImg:  'https://i.postimg.cc/gcw5Nmxn/Screenshot-2026-06-03-075956.png'
+  },
+  caliper: {
+    num: '03 —',
+    title: 'Brake Calipers',
+    role: 'Designer & Analyst',
+    tools: 'CAD Software, Technical Drawing',
+    category: 'Component Design',
+    tags: ['CAD Design', 'Structural Analysis', 'Technical Drawing', 'Braking Systems'],
+    desc: `<p>This project focused on the design and analysis of brake caliper components — a critical safety element in any braking system. The work involved detailed CAD modelling of the caliper body, piston housing, and mounting geometry, with particular attention to dimensional accuracy and structural adequacy.</p><p>The design process incorporated considerations for thermal expansion, hydraulic pressure distribution, and interface geometry with the rotor and pad assembly. Structural analysis was conducted to verify that the caliper design could withstand expected braking loads without deformation.</p><p>Detailed engineering drawings were produced as part of the deliverable, suitable for review and potential manufacture.</p>`,
+    specs: { software: 'CAD / FEA', type: 'Component Design', domain: 'Braking Systems', status: 'Completed' },
+    outcomes: ['Full 3D model of brake caliper assembly', 'Structural analysis performed under peak braking loads', 'Hydraulic pressure distribution evaluated', 'Engineering drawings produced to manufacturing standard', 'Design validated against standard braking performance criteria'],
+    thumbImg: 'https://i.postimg.cc/gkTDxZzh/Screenshot-2026-06-03-073854.png',
+    projImg:  'https://i.postimg.cc/gkTDxZzh/Screenshot-2026-06-03-073854.png',
+    projImg2: null,
+    drawImg:  'https://i.postimg.cc/Y9RNM4DM/Screenshot-2026-06-03-074620.png'
+  },
+  matlab: {
+    num: '04 —',
+    title: 'Parabolic Trajectory Modelling',
+    role: 'Simulation Engineer',
+    tools: 'MATLAB',
+    category: 'Computational Modelling',
+    github: 'https://github.com/tanayvimal/Parabolic-Trajectory-Modelling',
+    tags: ['MATLAB', 'Simulation', 'Data Visualisation', 'Projectile Motion'],
+    desc: `<p>This project involved the computational modelling and visualisation of parabolic trajectories using MATLAB. The simulation modelled projectile motion under varying initial conditions — including launch angle, initial velocity, and gravitational acceleration — producing accurate trajectory plots for each configuration.</p><p>The model was built with parameterised inputs, allowing rapid iteration across a range of scenarios. Outputs were visualised as 2D trajectory plots, with annotations indicating key values such as maximum range, peak height, and time of flight.</p><p>The project demonstrated an applied understanding of classical mechanics and the use of numerical methods and scripting for engineering problem-solving.</p>`,
+    specs: { software: 'MATLAB', type: 'Computational Simulation', domain: 'Applied Mechanics', status: 'Completed' },
+    outcomes: ['Parameterised MATLAB model for parabolic trajectory simulation', 'Variable inputs: launch angle, velocity, gravity', 'Trajectory plots generated with key annotations', 'Range, peak height, and time of flight computed accurately', 'Results validated against analytical solutions'],
+    thumbImg: 'https://i.postimg.cc/vBw1kQQM/Whats-App-Image-2026-05-04-at-10-24-00-PM.jpg',
+    projImg:  'https://i.postimg.cc/Gtc43qTt/Video-Project-1-(1).gif',
+    projImg2: 'https://i.postimg.cc/RVZWjpzg/Whats-App-Image-2026-05-05-at-1-16-35-PM.jpg',
+    drawImg:  null,
+    hideDrawing: true,
+    img2Style: 'document'
+  }
+};
+
+function openDetail(id) {
+  currentDetailId = id;
+  const p = projects[id];
+  document.getElementById('d-num').textContent = p.num;
+  document.getElementById('d-title').textContent = p.title;
+  document.getElementById('d-role').textContent = p.role;
+  document.getElementById('d-tools').textContent = p.tools;
+  document.getElementById('d-category').textContent = p.category;
+  document.getElementById('d-desc').innerHTML = p.desc;
+  document.getElementById('d-spec-software').textContent = p.specs.software;
+  document.getElementById('d-spec-type').textContent = p.specs.type;
+  document.getElementById('d-spec-domain').textContent = p.specs.domain;
+  document.getElementById('d-spec-status').textContent = p.specs.status;
+
+  const tagsEl = document.getElementById('d-tags');
+  tagsEl.innerHTML = p.tags.map(t => `<span class="tool-tag">${t}</span>`).join('');
+
+  const outEl = document.getElementById('d-outcomes');
+  outEl.innerHTML = p.outcomes.map(o => `<li>${o}</li>`).join('');
+
+  // GitHub link
+  const githubEl = document.getElementById('d-github-link');
+  if (p.github) {
+    githubEl.href = p.github;
+    githubEl.style.display = 'inline-flex';
+  } else {
+    githubEl.style.display = 'none';
+  }
+
+  // Reset then restore saved images for this project
+  const projImg = document.getElementById('detail-proj-img');
+  const projImg2 = document.getElementById('detail-proj-img2');
+  const img2Block = document.getElementById('detail-img2-block');
+  const drawImg = document.getElementById('detail-draw-img');
+  const projPlaceholder = document.getElementById('detail-proj-placeholder');
+  const drawPlaceholder = document.getElementById('detail-draw-placeholder');
+  const p_data = projects[id];
+
+  // Primary detail image
+  if (p_data.projImg) {
+    projImg.src = p_data.projImg;
+    projImg.style.display = 'block';
+    if (projPlaceholder) projPlaceholder.style.display = 'none';
+  } else {
+    projImg.src = '';
+    projImg.style.display = 'none';
+    if (projPlaceholder) projPlaceholder.style.display = '';
+  }
+
+  // Second detail image (gkdc, matlab)
+  if (p_data.projImg2) {
+    projImg2.src = p_data.projImg2;
+    img2Block.style.display = '';
+    if (p_data.img2Style === 'document') {
+      img2Block.classList.add('detail-visual-block--doc');
+      projImg2.style.objectFit = 'contain';
+      projImg2.style.background = '#ffffff';
+      projImg2.style.padding = '1rem 1.5rem';
+    } else {
+      img2Block.classList.remove('detail-visual-block--doc');
+      projImg2.style.objectFit = 'cover';
+      projImg2.style.background = '';
+      projImg2.style.padding = '';
+    }
+  } else {
+    projImg2.src = '';
+    img2Block.style.display = 'none';
+  }
+
+  // Engineering drawing block
+  const drawBlock = document.getElementById('detail-draw-block');
+  if (p_data.hideDrawing) {
+    drawBlock.style.display = 'none';
+  } else {
+    drawBlock.style.display = '';
+    if (p_data.drawImg) {
+      drawImg.src = p_data.drawImg;
+      drawImg.style.display = 'block';
+      if (drawPlaceholder) drawPlaceholder.style.display = 'none';
+    } else {
+      drawImg.src = '';
+      drawImg.style.display = 'none';
+      if (drawPlaceholder) drawPlaceholder.style.display = '';
+    }
+  }
+
+  const main = document.getElementById('main-site');
+  const detail = document.getElementById('project-detail');
+  const wipe = document.getElementById('page-wipe');
+
+  wipe.className = 'wipe-in';
+  setTimeout(() => {
+    main.classList.add('hidden');
+    detail.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    wipe.className = 'wipe-out';
+    requestAnimationFrame(() => {
+      detail.classList.add('visible');
+      // Image wipe reveal
+      setTimeout(() => {
+        document.querySelectorAll('.detail-placeholder, .detail-drawing').forEach(el => {
+          el.classList.add('img-wipe-reveal');
+          el.addEventListener('animationend', () => el.classList.remove('img-wipe-reveal'), { once: true });
+        });
+      }, 100);
+    });
+  }, 450);
+}
+
+function closeDetail() {
+  const main = document.getElementById('main-site');
+  const detail = document.getElementById('project-detail');
+  const wipe = document.getElementById('page-wipe');
+  wipe.className = 'wipe-in';
+  setTimeout(() => {
+    detail.classList.remove('visible');
+    detail.style.display = 'none';
+    main.classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    wipe.className = 'wipe-out';
+  }, 450);
+}
+
+function navTo(id) {
+  const detail = document.getElementById('project-detail');
+  const main = document.getElementById('main-site');
+  if (detail.classList.contains('visible')) {
+    detail.classList.remove('visible');
+    setTimeout(() => {
+      detail.style.display = 'none';
+      main.classList.remove('hidden');
+      setTimeout(() => {
+        const target = document.getElementById(id);
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      }, 50);
+    }, 400);
+  } else {
+    const target = document.getElementById(id);
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+function toggleMenu() {
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+
+// Typewriter
+function typewriter(el, lines, speed = 60, onComplete) {
+  let lineIndex = 0, charIndex = 0;
+  el.innerHTML = '';
+  function type() {
+    if (lineIndex >= lines.length) {
+      document.getElementById('tw-cursor').style.animation = 'blink 1s step-end infinite';
+      if (onComplete) onComplete();
+      return;
+    }
+    if (charIndex < lines[lineIndex].length) {
+      el.innerHTML += lines[lineIndex][charIndex] === '\n' ? '<br>' : lines[lineIndex][charIndex];
+      charIndex++;
+      setTimeout(type, speed);
+    } else {
+      lineIndex++; charIndex = 0;
+      if (lineIndex < lines.length) setTimeout(type, speed * 4);
+      else {
+        document.getElementById('tw-cursor').style.animation = 'blink 1s step-end infinite';
+        if (onComplete) onComplete();
+      }
+    }
+  }
+  type();
+}
+
+function revealEl(el, delay) {
+  setTimeout(() => {
+    el.style.opacity = '1';
+    el.style.transform = 'translateY(0)';
+  }, delay);
+}
+
+setTimeout(() => typewriter(
+  document.getElementById('typewriter-text'),
+  ['Tanay\nVimal'],
+  75,
+  () => {
+    revealEl(document.getElementById('hero-subtitle'), 150);
+    revealEl(document.getElementById('hero-tagline'), 450);
+    revealEl(document.getElementById('hero-desc'), 750);
+  }
+), 300);
+
+// ── ANIMATION 6: Elastic overshoot counter ──
+function animateCounter(el, target, suffix, duration = 1400) {
+  const start = performance.now();
+  // Elastic ease: overshoots slightly, then snaps back
+  function elasticOut(t) {
+    const c4 = (2 * Math.PI) / 4.5;
+    if (t === 0) return 0;
+    if (t === 1) return 1;
+    return Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
+  }
+  function update(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = elasticOut(progress);
+    const value = Math.round(eased * target);
+    el.textContent = value + suffix;
+    // Subtle scale pulse on overshoot
+    if (progress > 0.6 && progress < 0.85) {
+      const pulse = 1 + Math.abs(eased - 1) * 0.12;
+      el.style.transform = `scale(${pulse})`;
+    } else if (progress >= 0.85) {
+      el.style.transform = 'scale(1)';
+    }
+    if (progress < 1) requestAnimationFrame(update);
+    else { el.textContent = target + suffix; el.style.transform = 'scale(1)'; }
+  }
+  requestAnimationFrame(update);
+}
+
+const statsObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      setTimeout(() => animateCounter(document.getElementById('stat-projects'), 4, '+'), 0);
+      setTimeout(() => animateCounter(document.getElementById('stat-roles'), 2, ''), 150);
+      setTimeout(() => animateCounter(document.getElementById('stat-grad'), 2029, ''), 300);
+      statsObserver.disconnect();
+    }
+  });
+}, { threshold: 0.5 });
+statsObserver.observe(document.getElementById('stat-projects'));
+
+// Fade in on scroll
+const faders = document.querySelectorAll('.fade-in');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+faders.forEach(f => io.observe(f));
+
+// Slide up for project cards
+document.querySelectorAll('.proj-card').forEach((card, i) => {
+  card.classList.add('slide-up');
+  card.style.transitionDelay = `${i * 0.1}s`;
+  io.observe(card);
+});
+
+// ── ANIMATION 4: Alternating left/right entry for exp items + skill groups ──
+const altObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      altObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
+
+document.querySelectorAll('.exp-item').forEach((el, i) => {
+  el.classList.add(i % 2 === 0 ? 'slide-left' : 'slide-right');
+  el.style.transitionDelay = `${i * 0.08}s`;
+  altObserver.observe(el);
+});
+
+document.querySelectorAll('.skill-group').forEach((el, i) => {
+  el.classList.add(i % 2 === 0 ? 'slide-left' : 'slide-right');
+  el.style.transitionDelay = `${i * 0.07}s`;
+  altObserver.observe(el);
+});
+
+// ── ANIMATION 1: SVG section rule draw-in ──
+const ruleObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('drawn');
+      ruleObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.section-rule').forEach(r => ruleObserver.observe(r));
+
+// ── ANIMATION 5: Ambient particle field in hero ──
+(function() {
+  const canvas = document.getElementById('particle-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [], animId;
+
+  function resize() {
+    const hero = document.getElementById('hero');
+    W = canvas.width = hero.offsetWidth;
+    H = canvas.height = hero.offsetHeight;
+  }
+  window.addEventListener('resize', () => { resize(); seedParticles(); }, { passive: true });
+
+  const COUNT = 55;
+  function seedParticles() {
+    particles = [];
+    for (let i = 0; i < COUNT; i++) {
+      particles.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.28,
+        vy: (Math.random() - 0.5) * 0.28,
+        r: Math.random() * 1.4 + 0.4,
+        alpha: Math.random() * 0.35 + 0.08
+      });
+    }
+  }
+  window.addEventListener('resize', () => { resize(); seedParticles(); }, { passive: true });
+
+  const CONNECT_DIST = 130;
+
+  function drawParticles() {
+    ctx.clearRect(0, 0, W, H);
+    // connections
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < CONNECT_DIST) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(255,255,255,${(1 - dist / CONNECT_DIST) * 0.06})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+    // dots
+    particles.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${p.alpha})`;
+      ctx.fill();
+    });
+  }
+
+  function tick() {
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0) p.x = W;
+      if (p.x > W) p.x = 0;
+      if (p.y < 0) p.y = H;
+      if (p.y > H) p.y = 0;
+    });
+    drawParticles();
+    animId = requestAnimationFrame(tick);
+  }
+  tick();
+
+  // Pause when hero is not visible
+  const heroObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) { cancelAnimationFrame(animId); }
+      else { tick(); }
+    });
+  }, { threshold: 0 });
+  heroObs.observe(document.getElementById('hero'));
+})();
+
+// Scroll progress bar
+const progressBar = document.getElementById('scroll-progress');
+window.addEventListener('scroll', () => {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  progressBar.style.width = (scrollTop / docHeight * 100) + '%';
+}, { passive: true });
+
+// Magnetic buttons
+document.querySelectorAll('.btn, .hero-btns .btn').forEach(btn => {
+  btn.addEventListener('mousemove', e => {
+    const rect = btn.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    btn.style.transform = `translate(${x * 0.25}px, ${y * 0.35}px)`;
+  });
+  btn.addEventListener('mouseleave', () => {
+    btn.style.transform = 'translate(0,0)';
+  });
+});
+
+// Text scramble on nav hover
+const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+function scramble(el) {
+  const original = el.dataset.original || el.textContent;
+  el.dataset.original = original;
+  let iteration = 0;
+  clearInterval(el._scrambleInterval);
+  el._scrambleInterval = setInterval(() => {
+    el.textContent = original.split('').map((char, i) => {
+      if (char === ' ') return ' ';
+      if (i < iteration) return original[i];
+      return chars[Math.floor(Math.random() * chars.length)];
+    }).join('');
+    if (iteration >= original.length) {
+      clearInterval(el._scrambleInterval);
+      el.textContent = original;
+    }
+    iteration += 0.3;
+  }, 55);
+}
+document.querySelectorAll('.nav-links a').forEach(a => {
+  a.addEventListener('mouseenter', () => scramble(a));
+});
+
+// Custom cursor
+const cursor = document.getElementById('cursor');
+const cursorDot = document.getElementById('cursor-dot');
+let cx = 0, cy = 0, dx = 0, dy = 0;
+document.addEventListener('mousemove', e => { cx = e.clientX; cy = e.clientY; });
+(function animCursor() {
+  dx += (cx - dx) * 0.12;
+  dy += (cy - dy) * 0.12;
+  cursor.style.left = dx + 'px';
+  cursor.style.top = dy + 'px';
+  cursorDot.style.left = cx + 'px';
+  cursorDot.style.top = cy + 'px';
+  requestAnimationFrame(animCursor);
+})();
+document.querySelectorAll('a, button, .proj-card, .btn, .nav-logo, .badge').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+});
+
+// Section number count-up on scroll
+document.querySelectorAll('.section-label').forEach(label => {
+  const text = label.textContent.trim();
+  const num = parseInt(text);
+  if (isNaN(num)) return;
+  label.textContent = '00';
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        let current = 0;
+        const interval = setInterval(() => {
+          current++;
+          label.textContent = String(current).padStart(2, '0');
+          label.classList.add('counted');
+          if (current >= num) clearInterval(interval);
+        }, 60);
+        obs.unobserve(label);
+      }
+    });
+  }, { threshold: 0.5 });
+  obs.observe(label);
+});
+
+function handleSubmit() {
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const msg = document.getElementById('message').value.trim();
+  if (!name || !email || !msg) { alert('Please fill in all fields.'); return; }
+  window.location.href = `mailto:tanayvimal26@gmail.com?subject=Portfolio Inquiry from ${encodeURIComponent(name)}&body=${encodeURIComponent(msg)}%0A%0AFrom: ${encodeURIComponent(email)}`;
+}
+
+// Per-project image store (for hard-coded URLs)
+let currentDetailId = null;
+
+// Spotlight effect
+const spotlight = document.getElementById('spotlight');
+document.addEventListener('mousemove', e => {
+  spotlight.style.left = e.clientX + 'px';
+  spotlight.style.top = e.clientY + 'px';
+}, { passive: true });
+
+// Pop effect on proj cards and badges
+document.querySelectorAll('.proj-card').forEach(card => {
+  card.addEventListener('mouseenter', () => {
+    card.style.transition = 'transform 0.2s cubic-bezier(0.34,1.56,0.64,1), background 0.3s';
+    card.style.transform = 'scale(1.03)';
+    card.style.zIndex = '10';
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transition = 'transform 0.35s ease, background 0.3s';
+    card.style.transform = 'scale(1)';
+    card.style.zIndex = '';
+  });
+});
+document.querySelectorAll('.badge').forEach(badge => {
+  badge.addEventListener('mouseenter', () => {
+    badge.style.transition = 'transform 0.2s cubic-bezier(0.34,1.56,0.64,1), background 0.25s';
+    badge.style.transform = 'scale(1.1)';
+  });
+  badge.addEventListener('mouseleave', () => {
+    badge.style.transition = 'transform 0.35s ease, background 0.25s';
+    badge.style.transform = 'scale(1)';
+  });
+});
+
+// Button ripple
+document.querySelectorAll('.btn').forEach(btn => {
+  btn.addEventListener('click', e => {
+    const rect = btn.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = e.clientX - rect.left - size / 2;
+    const y = e.clientY - rect.top - size / 2;
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple';
+    ripple.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px`;
+    btn.appendChild(ripple);
+    ripple.addEventListener('animationend', () => ripple.remove());
+  });
+});
+
+// ── ANIMATION 2: Multi-layer parallax (name, photo, grid bg, eyebrow) ──
+document.addEventListener('scroll', () => {
+  const scrolled = window.scrollY;
+  const heroName = document.querySelector('.hero-name');
+  const heroImg  = document.querySelector('.hero-image-frame');
+  const gridBg   = document.querySelector('.hero-grid-bg');
+  const eyebrow  = document.querySelector('.hero-eyebrow');
+  if (heroName) heroName.style.transform = `translateY(${scrolled * 0.08}px)`;
+  if (heroImg)  heroImg.style.transform  = `translateY(${scrolled * 0.04}px)`;
+  if (gridBg)   gridBg.style.transform   = `translateY(${scrolled * 0.15}px)`;
+  if (eyebrow)  eyebrow.style.transform  = `translateY(${scrolled * 0.05}px)`;
+}, { passive: true });
+
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+  navLinks.forEach(a => {
+    const href = a.getAttribute('href');
+    a.style.color = href === `#${current}` ? '#ffffff' : '';
+    if (href === `#${current}`) { a.style.setProperty('--underline-w', '100%'); }
+  });
+}, { passive: true });
+</script>
+</body>
+</html>
